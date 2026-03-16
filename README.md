@@ -6,46 +6,40 @@
 
 ## Introduction
 
-Have you ever wondered if professional League of Legends matches are decided in the first 15 minutes? In the competitive esports scene, there's a concept called "snowballing" – where early advantages compound over time, making comebacks increasingly difficult. This project investigates whether we can predict the winner of a match using only statistics from the first 15 minutes of gameplay.
+Can you predict who will win a professional League of Legends match just 15 minutes into the game? This project explores the "snowballing effect" – where early advantages compound over time, making comebacks harder and harder.
 
-### The Dataset
+**The Dataset:** 13 years of competitive League of Legends data from Oracle's Elixir, with over **90,000 team-level match records** from leagues worldwide.
 
-This analysis uses competitive League of Legends esports match data from Oracle's Elixir, spanning **13 years of professional play** across various leagues worldwide. After cleaning and filtering, the dataset contains **over 90,000 team-level match records**.
+**The Question:** Can early-game stats predict match winners?
 
-### Why This Matters
+**Why it matters:**
+- **Teams** learn which early objectives drive wins
+- **Analysts** can calculate real-time win probabilities
+- **Fans** know when comebacks are still possible
 
-Understanding whether early-game performance reliably predicts match outcomes has significant implications:
-- **For Players and Teams**: Helps identify which early objectives matter most for winning
-- **For Analysts**: Provides data-driven insights into comeback potential and win probability
-- **For Fans**: Helps understand when a game is truly decided versus when comebacks are still possible
-
-### Key Columns in the Dataset
-
-The analysis focuses on these team-level statistics measured at 15 minutes:
-- **`golddiffat15`**: Gold difference between teams (positive = team is ahead)
-- **`xpdiffat15`**: Experience point difference
-- **`csdiffat15`**: Creep score (minion kills) difference
-- **`killsat15`**, **`assistsat15`**, **`deathsat15`**: Combat statistics
-- **`firstblood`**: Whether the team secured the first kill
-- **`firstdragon`**: Whether the team killed the first dragon
-- **`firstherald`**: Whether the team killed the first Rift Herald
-- **`result`**: Final outcome (Win = True, Loss = False)
+**Key stats at 15 minutes:**
+- `golddiffat15` – Gold difference (how much richer one team is)
+- `xpdiffat15` – Experience difference (level advantages)
+- `csdiffat15` – Farm difference (minion kills)
+- `killsat15`, `assistsat15`, `deathsat15` – Combat stats
+- `firstblood`, `firstdragon`, `firstherald` – Early objectives
+- `result` – Did the team win? (our prediction target)
 
 ---
 
 ## Data Cleaning and Exploratory Data Analysis
 
-### Data Cleaning Process
+### Cleaning the Data
 
-To prepare the data for analysis, several cleaning steps were necessary:
+Four key steps prepared the data for analysis:
 
-1. **Filtered to team-level data only**: The raw dataset contains both individual player statistics and team summaries. Since match outcomes are determined at the team level, I focused only on team rows.
+1. **Kept only team-level data** – The raw data has stats for individual players AND team totals. We only need the team totals.
 
-2. **Removed games shorter than 15 minutes**: Games that ended before the 15-minute mark don't have valid statistics for our analysis. These early-ending games were removed from the dataset.
+2. **Removed super short games** – Games under 15 minutes don't have 15-minute stats (duh!).
 
-3. **Handled missing values**: Dropped rows where key 15-minute statistics were missing, as these likely indicate data collection issues.
+3. **Dropped rows with missing 15-minute stats** – If key data is missing, we can't use that game.
 
-4. **Converted data types**: Boolean columns like `firstblood` and `result` were stored as integers (0/1) and needed to be converted to proper boolean types for clearer analysis.
+4. **Fixed data types** – Converted 0/1 integers to True/False for clarity.
 
 ### Cleaned Data Preview
 
@@ -59,14 +53,9 @@ Here's a glimpse of the cleaned dataset:
 | LCKC     |         2436 |           2908 |         2142 |            9 |           5 | False        | True          | True     |
 | LCKC     |         1893 |           1208 |         1497 |           -3 |           2 | False        | True          | True     |
 
-### Univariate Analysis: Understanding Individual Variables
-
-To understand the competitive landscape, I first examined which leagues contribute most to the dataset and how long professional matches typically last.
+### What the Data Shows
 
 **Distribution of Games by League:**
-
-<!-- PLOT PLACEHOLDER: Top 20 Leagues by Number of Games -->
-<!-- TODO: Add fig1 (league_counts bar chart) to assets/ -->
 
 <iframe
   src="assets/leagues-distribution.html"
@@ -75,12 +64,9 @@ To understand the competitive landscape, I first examined which leagues contribu
   frameborder="0"
 ></iframe>
 
-*The LPL (China's premier league) and LCK (South Korea) dominate the dataset, reflecting their prominence in competitive League of Legends.*
+*Asian leagues (LPL, LCK) dominate the dataset – they're the powerhouses of competitive League.*
 
-**Distribution of Game Length:**
-
-<!-- PLOT PLACEHOLDER: Game Length Distribution -->
-<!-- TODO: Add fig2 (gamelength histogram) to assets/ -->
+**How Long Do Matches Last?**
 
 <iframe
   src="assets/gamelength-distribution.html"
@@ -89,16 +75,9 @@ To understand the competitive landscape, I first examined which leagues contribu
   frameborder="0"
 ></iframe>
 
-*Most professional matches last between 25-40 minutes, with an average around 30-35 minutes. The 15-minute mark represents roughly one-third of a typical match.*
+*Most matches last 25-40 minutes. The 15-minute mark is about one-third of the way through.*
 
-### Bivariate Analysis: Relationships Between Variables
-
-Next, I explored how early-game statistics relate to match outcomes.
-
-**Gold Difference at 15 Minutes vs. Game Outcome:**
-
-<!-- PLOT PLACEHOLDER: Gold Diff by Result Box Plot -->
-<!-- TODO: Add fig3 (golddiff box plot) to assets/ -->
+**Does Early Gold Lead = Win?**
 
 <iframe
   src="assets/golddiff-outcome.html"
@@ -107,12 +86,9 @@ Next, I explored how early-game statistics relate to match outcomes.
   frameborder="0"
 ></iframe>
 
-*Teams that win have a significantly higher gold advantage at 15 minutes. The median winning team is ahead by about 800 gold, while losing teams are typically behind by a similar amount.*
+*YES! Winning teams are typically ahead by ~800 gold at 15 minutes, while losing teams are behind by about the same.*
 
-**Win Rate by First Blood:**
-
-<!-- PLOT PLACEHOLDER: First Blood Win Rate Bar Chart -->
-<!-- TODO: Add fig4 (first blood win rate) to assets/ -->
+**First Blood = Victory?**
 
 <iframe
   src="assets/firstblood-winrate.html"
@@ -121,7 +97,7 @@ Next, I explored how early-game statistics relate to match outcomes.
   frameborder="0"
 ></iframe>
 
-*Securing first blood correlates with a notable win rate advantage, though it's not overwhelming. Teams with first blood win approximately 53-54% of the time.*
+*Getting the first kill helps, but it's not overwhelming – about 53-54% win rate vs. 46-47% without.*
 
 ### Interesting Aggregates
 
@@ -153,64 +129,48 @@ Next, I explored how early-game statistics relate to match outcomes.
 
 ## Assessment of Missingness
 
-### MNAR Analysis
+### MNAR (Missing Not At Random)
 
-One column that I believe exhibits **MNAR (Missing Not At Random)** characteristics is `dragons (type unknown)`, which is 96% missing in the dataset.
+**`dragons (type unknown)`** is 96% missing – likely **MNAR**. Why? The data recording system may have *failed to log dragon types specifically when unusual combinations occurred* or when bugs were triggered by the dragon types themselves. The missingness depends on what the values would have been.
 
-This missingness is likely MNAR because it depends on the dragon type values themselves. The data recording system may have failed to log dragon types specifically when unusual type combinations occurred, or when bugs in the tracking system were triggered by the dragon types themselves. In other words, *the fact that the data is missing could be related to what the actual values would have been*.
+**What could make this MAR instead?** If we had game patch info, tournament organizer details, or data collection system versions, we could explain the missingness through observable factors.
 
-**Additional data that could make this MAR:**
-- Game patch information (which version of League was played)
-- Tournament organizer information
-- Data collection system version
-- Timestamps of when data was recorded
+### Missingness Dependency
 
-With this information, we could explain the missingness through observable factors rather than the missing values themselves.
+**Good news:** All the critical 15-minute stats (`golddiffat15`, `xpdiffat15`, `csdiffat15`, `killsat15`, `assistsat15`, `deathsat15`) are 100% complete after cleaning. No missing values!
 
-### Missingness Dependency Analysis
+The missing data that does exist:
+- Player-level columns (100% missing by design – we only kept team data)
+- Features from later game versions (51-97% missing)
+- Rare mechanics like dragon types (96% missing)
 
-I analyzed whether the missingness of early-game statistics depends on other columns in the dataset. Specifically, I investigated the missingness pattern of game-related columns.
-
-**Key Finding: Most critical 15-minute statistics have NO missing values** after data cleaning. The columns `golddiffat15`, `xpdiffat15`, `csdiffat15`, `killsat15`, `assistsat15`, and `deathsat15` are all complete, which is essential for building reliable predictive models.
-
-The missing data that does exist primarily relates to:
-- Player-level columns (100% missing, by design – we filtered to team data only)
-- Features introduced in later game versions (51-97% missing)
-- Rare game mechanics like special dragon types (96% missing)
-
-<!-- PLOT PLACEHOLDER: Missingness Analysis Visualization -->
-<!-- Optional: Add a visualization showing missingness patterns -->
+None of this affects our prediction task.
 
 ---
 
 ## Hypothesis Testing
 
-### Research Question
+### The Question
 
-Does securing **first blood** (the first kill of the game) actually matter for winning?
-
-In competitive League of Legends, first blood is celebrated as an important psychological and economic advantage. But is there statistical evidence that teams who get first blood win more often than those who don't?
+Does getting **first blood** (the first kill) actually help teams win?
 
 ### Hypotheses
 
-**Null Hypothesis (H₀):** Teams that secure first blood have the same win rate as teams that don't secure first blood. Any observed difference in win rates is due to random chance.
+**Null Hypothesis:** First blood doesn't matter – the win rate is the same with or without it.
 
-**Alternative Hypothesis (H₁):** Teams that secure first blood have a higher win rate than teams that don't secure first blood.
+**Alternative Hypothesis:** First blood helps – teams with it win more often.
 
 ### Test Design
 
-- **Test Statistic:** Difference in win rates (First Blood - No First Blood)
+- **Test Statistic:** Difference in win rates (First Blood wins - No First Blood wins)
 - **Significance Level:** α = 0.05
-- **Method:** Permutation test with 1,000 simulations
+- **Method:** Permutation test (1,000 simulations)
 
 ### Results
 
-**Observed difference in win rates:** Teams with first blood won approximately 3.6 percentage points more often than teams without first blood.
+**Observed difference:** Teams with first blood won 3.6 percentage points more often.
 
-**P-value:** < 0.001 (essentially 0.000)
-
-<!-- PLOT PLACEHOLDER: Permutation Test Distribution -->
-<!-- TODO: Add permutation test visualization to assets/ -->
+**P-value:** < 0.001
 
 <iframe
   src="assets/hypothesis-test.html"
@@ -219,81 +179,50 @@ In competitive League of Legends, first blood is celebrated as an important psyc
   frameborder="0"
 ></iframe>
 
-*The red line shows our observed difference. The distribution shows what we'd expect by random chance. Our observed value is far beyond what random chance would produce.*
+*The red line is our observed difference. The blue histogram shows what random chance would produce. Our value is way outside that range.*
 
 ### Conclusion
 
-We **reject the null hypothesis**. There is strong statistical evidence that teams with first blood have a significantly higher win rate than teams without first blood. While the effect size is modest (~3.6 percentage points), it is definitely not due to random chance.
-
-This suggests that even a single early kill provides a measurable advantage that teams can leverage throughout the match.
+**We reject the null hypothesis.** First blood DOES matter – teams with first blood win significantly more often. The effect is real, though modest (~3.6%) – it helps, but doesn't guarantee victory.
 
 ---
 
 ## Framing a Prediction Problem
 
-### The Challenge
+**The Challenge:** Can we predict who will win using only the first 15 minutes of gameplay?
 
-**Can we predict whether a team will win or lose based solely on statistics from the first 15 minutes of gameplay?**
+**Type:** Binary classification (Win or Loss)
 
-This is a **binary classification problem** where:
-- **Response variable:** `result` (Win = True, Loss = False)
-- **Goal:** Classify each team as likely to win or lose
+**Response Variable:** `result` – Did the team win?
 
-### Why This Response Variable?
+**Evaluation Metric:** Accuracy (% of correct predictions)
 
-The match outcome (`result`) is the most meaningful measure in competitive League of Legends. Teams don't play to maximize gold or kills – they play to win the game. A model that predicts outcomes helps teams understand whether their early-game strategies are setting them up for success.
+**Why accuracy?** The dataset is perfectly balanced (50% wins, 50% losses), and both types of mistakes (false win/false loss) matter equally.
 
-### Evaluation Metric: Accuracy
+**Features we can use:** Only stats from the first 15 minutes – `golddiffat15`, `xpdiffat15`, `csdiffat15`, `killsat15`, `assistsat15`, `deathsat15`, `firstblood`, `firstdragon`, `firstherald`
 
-I chose **accuracy** (correct predictions / total predictions) as the primary evaluation metric for several reasons:
-
-1. **Balanced classes:** The dataset has roughly equal wins and losses (~50/50), so accuracy won't be misleading
-2. **Symmetric costs:** Falsely predicting a win is just as problematic as falsely predicting a loss – there's no asymmetric cost
-3. **Interpretability:** Accuracy is intuitive for anyone to understand
-
-### Information Available at Prediction Time
-
-**Critical constraint:** We can ONLY use information available at exactly 15 minutes into the match.
-
-**Features we can use:**
-- `golddiffat15`, `xpdiffat15`, `csdiffat15`
-- `killsat15`, `assistsat15`, `deathsat15`
-- `firstblood`, `firstdragon`, `firstherald`
-
-**Features we CANNOT use:**
-- `gamelength` (we don't know how long the game will last)
-- Final objective counts (`dragons`, `barons`, `heralds`)
-- End-game statistics (`dpm`, `damageshare`)
-
-This ensures our model is realistic – it only knows what a spectator would know at the 15-minute mark.
+**Features we CAN'T use:** Anything from after 15 minutes like final game length or end-game objectives
 
 ---
 
 ## Baseline Model
 
-### Model Description
+### The Simple Approach
 
 For the baseline model, I used **Logistic Regression** to predict match outcomes using just two fundamental economic indicators:
 
 **Features:**
-1. **`golddiffat15`** (Quantitative): Gold difference at 15 minutes
-2. **`xpdiffat15`** (Quantitative): Experience point difference at 15 minutes
+1. **`golddiffat15`** – Gold difference at 15 minutes (already numeric)
+2. **`firstblood`** – Did the team get the first kill? (converted True/False to 1/0)
 
-These features represent the core economic advantage/disadvantage a team has built up in the early game. Both are numeric and on similar scales, so no feature encoding was needed.
+Why these two? They're the most obvious early advantages: gold = better items, first blood = early momentum.
 
-### Why These Features?
-
-Gold and experience are the two primary economic resources in League of Legends. Teams that are ahead in these metrics typically have better items and higher champion levels, leading to combat advantages. These seemed like natural starting points for prediction.
-
-### Performance Results
+### Performance
 
 | Dataset  | Accuracy |
 |:---------|:---------|
 | Training | 0.733    |
 | Test     | 0.734    |
-
-<!-- PLOT PLACEHOLDER: Baseline Model Performance Bar Chart -->
-<!-- TODO: Add baseline performance comparison to assets/ -->
 
 <iframe
   src="assets/baseline-performance.html"
@@ -302,61 +231,34 @@ Gold and experience are the two primary economic resources in League of Legends.
   frameborder="0"
 ></iframe>
 
-*Both training and test accuracy significantly exceed random guessing (50%) and meet our target threshold of 70%.*
+*Both training and test accuracy beat random guessing (50%) and hit our 70% target.*
 
-### Is This Model "Good"?
+### Is This Good?
 
-**Yes, for a baseline model.** The model achieves:
-- **73.4% accuracy** – well above random guessing (50%)
-- **Strong generalization** – similar performance on training and test data (no overfitting)
-- **Meaningful predictions** – correctly predicts outcomes nearly 3 out of 4 times
-
-However, there's room for improvement. We're only using 2 out of 9+ available features, and we haven't tried more sophisticated algorithms or feature engineering. The next step is to build a more comprehensive model.
+**Yes, for a start.** The model gets it right 73% of the time – nearly 3 out of 4 matches. It doesn't overfit (train and test scores are similar). But we're only using 2 of 9+ available features, so there's definitely room for improvement.
 
 ---
 
 ## Final Model
 
-### Feature Engineering
+### Making It Better
 
-To improve upon the baseline, I engineered two new features that capture important gameplay concepts:
+I added two smart features that capture how *efficiently* teams play:
 
-**1. Kill Efficiency** = `killsat15 / (deathsat15 + 1)`
-- Measures how effectively a team trades kills for deaths in the early game
-- Higher values indicate dominant combat performance
-- The "+1" prevents division by zero when a team has no deaths
+**1. Kill Efficiency** = `killsat15 / (deathsat15 + 1)`  
+How many kills per death? A team with 10 kills and 2 deaths (ratio = 5.0) is crushing it. A team with 10 kills and 8 deaths (ratio = 1.1) is barely hanging on.
 
-**2. Economic Efficiency** = `golddiffat15 / (killsat15 + 1)`
-- Measures how much gold advantage the team gains per kill
-- Captures efficiency of converting kills into economic benefits
-- High values suggest strong objective control and farming between kills
+**2. Economic Efficiency** = `golddiffat15 / (killsat15 + 1)`  
+How much gold advantage per kill? High values mean the team is securing objectives and farming well, not just fighting.
 
-**Why these features are meaningful:** A team with 10 kills and 2 deaths is in a vastly different position than a team with 10 kills and 8 deaths, even though both have the same kill count. These ratio features capture the *quality* of early-game performance, not just the quantity.
+I also upgraded to a **Random Forest** algorithm (50 trees, max depth 10), which handles complex patterns better than simple models.
 
-### Model Selection and Hyperparameter Tuning
+### All Features Used (11 total)
 
-I upgraded from Logistic Regression to **Random Forest Classifier**, which can:
-- Capture non-linear relationships between features
-- Handle feature interactions automatically (e.g., high gold + high kills together)
-- Reduce overfitting through ensemble averaging
-
-**Hyperparameters tested:**
-- `max_depth`: [10, 20] – Controls tree depth to prevent overfitting
-- `n_estimators`: [50, 100] – Number of trees in the forest
-
-**Method:** GridSearchCV with 3-fold cross-validation to find the optimal combination.
-
-**Best hyperparameters found:**
-- `max_depth`: 10
-- `n_estimators`: 50
-
-### All Features Used
-
-The final model uses **11 total features:**
 - Original 9: `golddiffat15`, `xpdiffat15`, `csdiffat15`, `killsat15`, `assistsat15`, `deathsat15`, `firstblood`, `firstdragon`, `firstherald`
 - Engineered 2: `kill_efficiency`, `economic_efficiency`
 
-### Performance Results
+### Performance
 
 | Model    | Dataset  | Accuracy |
 |:---------|:---------|:---------|
@@ -366,9 +268,6 @@ The final model uses **11 total features:**
 | **Final**| **Training** | **0.831** |
 | **Final**| **Test**     | **0.757** |
 
-<!-- PLOT PLACEHOLDER: Model Comparison Bar Chart -->
-<!-- TODO: Add final model comparison to assets/ -->
-
 <iframe
   src="assets/model-comparison.html"
   width="800"
@@ -376,60 +275,50 @@ The final model uses **11 total features:**
   frameborder="0"
 ></iframe>
 
-*The final model achieves 75.7% test accuracy, a notable improvement over the baseline's 73.4%.*
+*The final model gets 75.7% accuracy – up from 73.4% in the baseline.*
 
-### Why the Final Model is Better
+### Why It's Better
 
-The final model improved because:
+Three reasons:
+1. **Uses all 11 features** – captures combat, objectives, AND efficiency
+2. **Random Forest algorithm** – handles complex patterns that simple models miss
+3. **Smart feature engineering** – kill/economic efficiency ratios reveal team performance quality
 
-1. **More comprehensive features:** Using all 11 features captures more aspects of early-game performance – combat effectiveness, objective control, and economic efficiency
-2. **Better algorithm:** Random Forest handles non-linear relationships and feature interactions that Logistic Regression cannot
-3. **Meaningful feature engineering:** The efficiency ratios provide signal beyond raw counts
-
-The model still generalizes well (similar train/test performance), confirming we're not overfitting despite using more features.
+Train and test scores are similar, so we're not overfitting.
 
 ---
 
 ## Fairness Analysis
 
-### Fairness Question
+### The Question
 
-Does the final model perform equally well for games from different eras of League of Legends?
+Does the model work equally well for modern games (2022+) vs. older games (pre-2022)?
 
-The game has evolved significantly over the years with major gameplay changes, new champions, and meta shifts. I wanted to test whether the model, trained on all eras, performs fairly across:
+League of Legends changes constantly – new champions, items, balance patches. I tested whether the model performs fairly across different eras:
 
-- **Group X (Early Era):** Games from 2014-2018
-- **Group Y (Modern Era):** Games from 2019+
-
-If the model performs significantly worse for one era, it could indicate that early-game patterns have changed over time.
-
-### Evaluation Metric
-
-**Accuracy** – consistent with our overall evaluation approach.
+- **Early Era:** 2014-2018
+- **Modern Era:** 2019+
 
 ### Hypotheses
 
-**Null Hypothesis (H₀):** The model is fair. Its accuracy for Early Era games and Modern Era games are roughly the same, and any observed differences are due to random chance.
+**Null Hypothesis (H₀):** The model is fair – accuracy is similar for both eras, and any difference is just random chance.
 
-**Alternative Hypothesis (H₁):** The model is unfair. Its accuracy differs significantly between Early Era and Modern Era games.
+**Alternative Hypothesis (H₁):** The model is unfair – accuracy differs significantly between eras.
 
 ### Test Design
 
 - **Test Statistic:** Absolute difference in accuracy between eras
 - **Significance Level:** α = 0.05
-- **Method:** Permutation test with 1,000 simulations
+- **Method:** Permutation test (1,000 simulations)
 
 ### Results
 
 **Observed Accuracies:**
-- Early Era (2014-2018): 73.37% accuracy (6,313 games)
-- Modern Era (2019+): 75.71% accuracy (27,469 games)
-- Absolute Difference: 2.34 percentage points
+- Early Era: 73.37%
+- Modern Era: 75.71%
+- Difference: 2.34 percentage points
 
-**P-value:** < 0.001 (essentially 0.000)
-
-<!-- PLOT PLACEHOLDER: Fairness Analysis Visualizations -->
-<!-- TODO: Add accuracy by era and permutation test to assets/ -->
+**P-value:** < 0.001
 
 <iframe
   src="assets/fairness-accuracy.html"
@@ -445,34 +334,32 @@ If the model performs significantly worse for one era, it could indicate that ea
   frameborder="0"
 ></iframe>
 
-*The model performs slightly but significantly better on Modern Era games.*
+*The model performs slightly better on modern games.*
 
 ### Conclusion
 
-We **reject the null hypothesis** (p < 0.001). The model's accuracy differs significantly between Early Era and Modern Era games.
+**We reject the null hypothesis** (p < 0.001). The model IS biased toward modern games.
 
-**Possible Explanation:** League of Legends has undergone major gameplay changes since 2018, including:
+**Why?** League changed massively after 2018:
 - Turret plating system (2019)
 - Dragon soul mechanics (2020)
-- Extensive jungle and objective changes
+- Jungle/objective reworks
 
-The relationships between 15-minute statistics and match outcomes may have shifted as the game meta evolved. The model may be capturing era-specific patterns that don't generalize perfectly across different versions of the game.
-
-**Implication:** The model shows a bias toward Modern Era gameplay, performing better on games that resemble the 2019+ meta. Teams and analysts should be cautious when applying this model to predict outcomes in future tournaments, as the game's continued evolution may further impact model performance.
+The model learned patterns from modern League, so it works better on modern data. For future predictions, be aware that continued game evolution may impact accuracy.
 
 ---
 
-## Conclusion
+## Wrap-Up
 
-This project demonstrates that **early-game performance at 15 minutes is highly predictive of match outcomes** in professional League of Legends. The final Random Forest model achieves 75.7% accuracy, correctly predicting winners more than 3 out of 4 times using only statistics from the first 15 minutes.
+**Early-game performance at 15 minutes strongly predicts match outcomes** in pro League. The final model gets it right 75.7% of the time – more than 3 out of 4 matches.
 
-**Key Takeaways:**
-- Economic advantages (gold, XP) are the strongest predictors
-- Objective control (first blood, dragon, herald) provides measurable advantages
-- The concept of "snowballing" is statistically validated
-- The game has evolved over time, affecting prediction patterns
+**Key insights:**
+- Gold and XP advantages are the strongest predictors
+- Objectives (first blood, dragon, herald) provide measurable edges
+- The "snowballing effect" is statistically real
+- The game evolves over time, affecting prediction patterns
 
-While the model is strong, it's not perfect – roughly 1 in 4 games still defies early predictions, keeping hope alive for cinematic comeback stories!
+But remember: 1 in 4 games still defy early predictions – comebacks DO happen!
 
 ---
 
