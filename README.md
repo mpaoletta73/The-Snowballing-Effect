@@ -431,4 +431,4 @@ But remember: 1 in 4 games still defy early predictions – comebacks DO happen!
 
 
 
-*This project was completed as part of DSC 80 (Practice and Application of Data Science) at UC San Diego.*
+*This project was completed as part of DSC 80 (Practice and Application of Data Science) at UCSD.*
