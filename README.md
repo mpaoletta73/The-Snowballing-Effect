@@ -146,12 +146,26 @@ To understand whether missingness patterns are random or systematic, I ran two f
 - **Result:** p < 0.001 → **DOES depend on year**
 - **Conclusion:** Missingness is MAR (Missing At Random) – entirely explained by when the game was played
 
+<iframe
+  src="assets/missingness-year.html"
+  width="800"
+  height="600"
+  frameborder="0"
+></iframe>
+
 **Test 2: Does `turretplates` missingness depend on `result` (win/loss)?**
 
 - **Expected:** NO – whether data is missing shouldn't relate to who won
 - **Test statistic:** Absolute difference in missingness rates
 - **Result:** p > 0.05 → **Does NOT depend on result**
 - **Conclusion:** Missingness is unrelated to game outcomes
+
+<iframe
+  src="assets/missingness-result.html"
+  width="800"
+  height="600"
+  frameborder="0"
+></iframe>
 
 These tests confirm that features missing due to game evolution (like turret plates) can be safely handled – the missingness doesn't bias our win/loss predictions.
 
