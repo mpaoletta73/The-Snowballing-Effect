@@ -1,21 +1,22 @@
-# League of Legends: The Snowballing Effect ❄️⚔️
+# League of Legends: The Snowballing Effect 🎮⚔️❄️
 
-**By Matthew Paoletta**
+**By Matthew Paoletta (A17442366)**
+
 
 ---
 
 ## Introduction
 
-Can you predict who will win a professional League of Legends match just 15 minutes into the game? This project explores the "snowballing effect" – where early advantages compound over time, making comebacks harder and harder.
+Is it possible to predict who will win a professional League of Legends match from just using the first 15 minutes of the game? This project explores what many League of Legends players call "The Snowballing Effect"; where early advantages compound over time, making comebacks harder and harder.
 
-**The Dataset:** 13 years of competitive League of Legends data from Oracle's Elixir, with over **90,000 team-level match records** from leagues worldwide.
+The Dataset that was used contains **13 years** of competitive League of Legends data from **Oracle's Elixir**, with over **90,000 team-level match records** from leagues worldwide.
 
 **The Question:** Can early-game stats predict match winners?
 
 **Why it matters:**
 - **Teams** learn which early objectives drive wins
 - **Analysts** can calculate real-time win probabilities
-- **Fans** know when comebacks are still possible
+- **Fans** know how rare a specific comeback is
 
 **Key stats at 15 minutes:**
 - `golddiffat15` – Gold difference (how much richer one team is)
@@ -23,7 +24,7 @@ Can you predict who will win a professional League of Legends match just 15 minu
 - `csdiffat15` – Farm difference (minion kills)
 - `killsat15`, `assistsat15`, `deathsat15` – Combat stats
 - `firstblood`, `firstdragon`, `firstherald` – Early objectives
-- `result` – Did the team win? (our prediction target)
+- `result` – Did the team win? (our target)
 
 ---
 
@@ -35,7 +36,7 @@ Four key steps prepared the data for analysis:
 
 1. **Kept only team-level data** – The raw data has stats for individual players AND team totals. We only need the team totals.
 
-2. **Removed super short games** – Games under 15 minutes don't have 15-minute stats (duh!).
+2. **Removed super short games** – Games under 15 minutes don't have 15-minute stats.
 
 3. **Dropped rows with missing 15-minute stats** – If key data is missing, we can't use that game.
 
@@ -64,7 +65,7 @@ Here's a glimpse of the cleaned dataset:
   frameborder="0"
 ></iframe>
 
-*Asian leagues (LPL, LCK) dominate the dataset – they're the powerhouses of competitive League.*
+*Some of the larger leagues like LPL and LCK dominate the database as they have been around for so long*
 
 **How Long Do Matches Last?**
 
@@ -75,9 +76,9 @@ Here's a glimpse of the cleaned dataset:
   frameborder="0"
 ></iframe>
 
-*Most matches last 25-40 minutes. The 15-minute mark is about one-third of the way through.*
+*At the competitive level, most matches last in between 25-40 minutes. The 15-minute mark is about halfway through the match and marks a pivotal turning point in most League of Legends games.*
 
-**Does Early Gold Lead = Win?**
+**Does Early Gold Lead to a Win?**
 
 <iframe
   src="assets/golddiff-outcome.html"
@@ -86,9 +87,9 @@ Here's a glimpse of the cleaned dataset:
   frameborder="0"
 ></iframe>
 
-*YES! Winning teams are typically ahead by ~800 gold at 15 minutes, while losing teams are behind by about the same.*
+*Yes it does! A winning team is typically ahead by ~1600 gold at 15 minutes.*
 
-**First Blood = Victory?**
+**Does First Blood lead to Victory**
 
 <iframe
   src="assets/firstblood-winrate.html"
@@ -97,33 +98,24 @@ Here's a glimpse of the cleaned dataset:
   frameborder="0"
 ></iframe>
 
-*Getting the first kill helps, but it's not overwhelming – about 53-54% win rate vs. 46-47% without.*
+*Getting the first kill helps, but it's not overwhelming, about 60.7% win rate vs. 39.3% without.*
 
 ### Interesting Aggregates
-
-**Summary Statistics by Game Outcome:**
-
-|        |   ('golddiffat15', 'mean') |   ('golddiffat15', 'median') |   ('xpdiffat15', 'mean') |   ('killsat15', 'mean') |   ('deathsat15', 'mean') |
-|:-------|---------------------------:|-----------------------------:|-------------------------:|------------------------:|-------------------------:|
-| Loss   |                    -818.14 |                       -652.0 |                  -459.63 |                    3.33 |                     4.33 |
-| Win    |                     818.14 |                        652.0 |                   459.63 |                    4.33 |                     3.33 |
-
-*Winning teams have an average gold lead of +818 at 15 minutes, while losing teams are behind by the same amount. The kill-to-death ratio also flips – winners average 4.33 kills vs. 3.33 deaths, while losers have the opposite.*
 
 **Win Rate by Early Objectives Secured:**
 
 | firstblood   | firstdragon   | firstherald   |   Win Rate |   Games |
 |:-------------|:--------------|:--------------|-----------:|--------:|
-| True         | True          | True          |      66.27 |   22647 |
-| True         | True          | False         |      63.22 |   15040 |
-| False        | True          | True          |      61.23 |   12734 |
-| True         | False         | True          |      53.50 |    5869 |
-| True         | False         | False         |      47.37 |   10198 |
-| False        | True          | False         |      46.65 |   12734 |
-| False        | False         | True          |      38.57 |    5391 |
-| False        | False         | False         |      33.59 |   15169 |
+| True         | True          | True          |      76.93 |   26299 |
+| False        | True          | True          |      60.69 |   15789 |
+| True         | False         | True          |      59.00 |   21255 |
+| True         | True          | False         |      58.82 |   20636 |
+| False        | True          | False         |      41.56 |   21752 |
+| False        | False         | True          |      41.23 |   20186 |
+| True         | False         | False         |      39.14 |   16254 |
+| False        | False         | False         |      23.32 |   26737 |
 
-*Securing all three early objectives (first blood, dragon, and herald) leads to a 66% win rate. Conversely, securing none of these objectives results in only a 34% win rate. Objectives matter!*
+*Securing all three early objectives (first blood, dragon, and herald) leads to a 77% win rate. Conversely, securing none of these objectives results in only a 23% win rate. Objectives do matter!*
 
 ---
 
@@ -193,7 +185,7 @@ Does getting **first blood** (the first kill) actually help teams win?
 
 ### Results
 
-**Observed difference:** Teams with first blood won 3.6 percentage points more often.
+**Observed difference:** Teams with first blood won 2.34 percentage points more often.
 
 **P-value:** < 0.001
 
@@ -208,7 +200,7 @@ Does getting **first blood** (the first kill) actually help teams win?
 
 ### Conclusion
 
-**We reject the null hypothesis.** First blood DOES matter – teams with first blood win significantly more often. The effect is real, though modest (~3.6%) – it helps, but doesn't guarantee victory.
+**We reject the null hypothesis.** First blood DOES matter – teams with first blood win significantly more often. The effect is real, though modest (~2.3%) – it helps, but doesn't guarantee victory.
 
 ---
 
@@ -246,8 +238,8 @@ Why these two? They're the most obvious early advantages: gold = better items, f
 
 | Dataset  | Accuracy |
 |:---------|:---------|
-| Training | 0.733    |
-| Test     | 0.734    |
+| Training | 0.746    |
+| Test     | 0.748    |
 
 <iframe
   src="assets/baseline-performance.html"
@@ -260,7 +252,7 @@ Why these two? They're the most obvious early advantages: gold = better items, f
 
 ### Is This Good?
 
-**Yes, for a start.** The model gets it right 73% of the time – nearly 3 out of 4 matches. It doesn't overfit (train and test scores are similar). But we're only using 2 of 9+ available features, so there's definitely room for improvement.
+**Yes, for a start.** The model gets it right 75% of the time – 3 out of 4 matches. It doesn't overfit (train and test scores are similar). But we're only using 2 of 9+ available features, so there's definitely room for improvement.
 
 ---
 
@@ -268,7 +260,7 @@ Why these two? They're the most obvious early advantages: gold = better items, f
 
 ### Making It Better
 
-I added two smart features that capture how *efficiently* teams play:
+I added two engineered features that capture how efficiently teams play:
 
 **1. Kill Efficiency** = `killsat15 / (deathsat15 + 1)`  
 How many kills per death? A team with 10 kills and 2 deaths (ratio = 5.0) is crushing it. A team with 10 kills and 8 deaths (ratio = 1.1) is barely hanging on.
@@ -288,10 +280,10 @@ I also upgraded to a **Random Forest** algorithm (50 trees, max depth 10), which
 | Model    | Dataset  | Accuracy |
 |:---------|:---------|:---------|
 | Random   | Any      | 0.500    |
-| Baseline | Training | 0.733    |
-| Baseline | Test     | 0.734    |
-| **Final**| **Training** | **0.831** |
-| **Final**| **Test**     | **0.757** |
+| Baseline | Training | 0.746    |
+| Baseline | Test     | 0.748    |
+| **Final**| **Training** | **0.766** |
+| **Final**| **Test**     | **0.753** |
 
 <iframe
   src="assets/model-comparison.html"
@@ -300,7 +292,7 @@ I also upgraded to a **Random Forest** algorithm (50 trees, max depth 10), which
   frameborder="0"
 ></iframe>
 
-*The final model gets 75.7% accuracy – up from 73.4% in the baseline.*
+*The final model gets 75.3% accuracy – up from 74.8% in the baseline.*
 
 ### Why It's Better
 
@@ -386,6 +378,6 @@ The model learned patterns from modern League, so it works better on modern data
 
 But remember: 1 in 4 games still defy early predictions – comebacks DO happen!
 
----
+
 
 *This project was completed as part of DSC 80 (Practice and Application of Data Science) at UC San Diego.*
