@@ -1,0 +1,10 @@
+# Jupyter Notebooks (keep code private per project instructions)
+*.ipynb
+
+# Python cache
+__pycache__/
+*.pyc
+
+# OS files
+.DS_Store
+Thumbs.db

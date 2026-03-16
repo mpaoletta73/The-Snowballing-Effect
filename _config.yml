@@ -1,0 +1,6 @@
+remote_theme: pages-themes/cayman@v0.2.0
+plugins:
+  - jekyll-remote-theme
+
+title: "League of Legends: The Snowballing Effect"
+description: Predicting Match Outcomes from Early Game Statistics
